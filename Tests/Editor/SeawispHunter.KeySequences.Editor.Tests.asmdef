@@ -1,0 +1,19 @@
+{
+    "name": "SeawispHunter.KeySequences.Editor.Tests",
+    "references": [
+        "SeawispHunter.KeySequences",
+        "SeawispHunter.KeySequences.Editor"
+    ],
+    "optionalUnityReferences": [
+        "TestAssemblies"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": []
+}
