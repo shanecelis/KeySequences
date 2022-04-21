@@ -11,15 +11,15 @@ namespace SeawispHunter.KeySequences {
 
  */
 public class KeySequence {
-  TrieMap<Action> trie = new TrieMap<Action>();
+  TrieMap<Action<string>> trie = new TrieMap<Action<string>>();
   private StringBuilder keyAccum = new StringBuilder();
 
-  public Action this[string key] {
+  public Action<string> this[string key] {
     get => trie.ValueBy(key);
     set => trie.Add(key, value);
   }
 
-  public bool TryGetValue(string key, out Action action, out bool hasPrefix) {
+  public bool TryGetValue(string key, out Action<string> action, out bool hasPrefix) {
     hasPrefix = trie.HasKeyPrefix(key);
     action = trie.ValueBy(key);
     return trie.HasKey(key);
@@ -30,13 +30,20 @@ public class KeySequence {
     var key = keyAccum.ToString();
     if (TryGetValue(key, out var action, out bool hasPrefix)) {
       // We have a key.
-      defaultAction();
+      action(key);
       if (! hasPrefix)
         keyAccum.Clear();
-    } else if (! hasPrefix) {
-      keyAccum.Clear();
-      if (trie.HasKeyPrefix(c.ToString()))
-        keyAccum.Append(c);
+    } else {
+      if (! hasPrefix) {
+        if (keyAccum.Length > 1) {
+          keyAccum.Clear();
+          // We could be starting a new input. 
+          // Recurse. Will only ever be one call deep.
+          OnTextInput(c);
+        } else {
+          keyAccum.Clear();
+        }
+      }
     }
   }
 }
