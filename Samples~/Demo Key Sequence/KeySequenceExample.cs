@@ -11,6 +11,9 @@ public class KeySequenceExample : MonoBehaviour {
     Label label;
     // Start is called before the first frame update
     void Start() {
+#if ! ENABLE_INPUT_SYSTEM
+      Debug.LogError("New input system required.");
+#else
         var root = GetComponent<UIDocument>().rootVisualElement;
         label = root.Q<Label>();
         foreach (var key in keys)
@@ -18,6 +21,7 @@ public class KeySequenceExample : MonoBehaviour {
         Keyboard.current.onTextInput += OnTextInput;
         ks.defaultAction += key => Debug.Log("action " + key);
         ks.Enable();
+#endif
     }
 
     void OnTextInput(char c) {
