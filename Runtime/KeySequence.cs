@@ -13,6 +13,7 @@ public class KeySequence {
   private StringBuilder keyAccum = new StringBuilder();
   public Action<string> defaultAction = null;
   public Action<string> overrideAction = null;
+  public Action<string> rejectAction = null;
   public event PropertyChangedEventHandler propertyChanged;
 
   public bool enabled { get; private set; } = false;
@@ -23,7 +24,7 @@ public class KeySequence {
   private string _accumulated;
   public string accumulated {
     get {
-      return _accumulated;
+      return _accumulated ?? "";
     }
     private set {
       if (_accumulated != value) {
@@ -66,7 +67,11 @@ public class KeySequence {
       else if (defaultAction != null)
         defaultAction(key);
     } else if (! hasPrefix) {
-      // No key and no prefix. We could be starting a new input.
+      // No key and no prefix.
+      if (rejectAction != null)
+        rejectAction(key);
+      accumulated = null;
+      // We could be starting a new input.
       if (keyAccum.Length > 1) {
         // Re-evaluate with a clean slate.
         keyAccum.Clear();
