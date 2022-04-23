@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 782f629a2df6243629ea8fe2873666a4, type: 3}
   m_Name: New Panel Settings
   m_EditorClassIdentifier: 
-  themeUss: {fileID: -4733365628477956816, guid: e542951f8e9ff4cde9d4a58cffb7fa35, type: 3}
+  themeUss: {fileID: -4733365628477956816, guid: b8a39263a02ca4c3bb19f84c16320e5c, type: 3}
   m_TargetTexture: {fileID: 0}
   m_ScaleMode: 1
   m_Scale: 1
-  m_ReferenceDpi: 126
+  m_ReferenceDpi: 217
   m_FallbackDpi: 96
   m_ReferenceResolution: {x: 1200, y: 800}
   m_ScreenMatchMode: 0
