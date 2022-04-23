@@ -7,11 +7,11 @@ using SeawispHunter.KeySequences;
 
 namespace SeawispHunter.KeySequences.Tests {
   public class KeySequenceTest {
-    private KeySequence ks;
+    private KeySequencerMap ks;
     private Dictionary<string, int> counts;
     [SetUp]
     public void Setup() {
-      ks = new KeySequence();
+      ks = new KeySequencerMap();
       counts = new Dictionary<string, int>();
     }
 

@@ -8,7 +8,7 @@ using System.ComponentModel;
 
 
 public class KeySequenceExample : MonoBehaviour {
-  KeySequence ks = new KeySequence();
+  KeySequencerMap ks = new KeySequencerMap();
   public string[] keys;
   Label label;
   // Start is called before the first frame update

@@ -8,7 +8,7 @@ namespace SeawispHunter.KeySequences {
 
  This class was made to interoperate with Unity's InputSystem
  */
-public class KeySequence {
+public class KeySequencerMap {
   TrieMap<Action<string>> trie = new TrieMap<Action<string>>();
   private StringBuilder keyAccum = new StringBuilder();
   public Action<string> defaultAction = null;
