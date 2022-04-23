@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.Text;
 using rm.Trie;
 
@@ -22,8 +23,6 @@ public class KeySequence {
   private string _accumulated;
   public string accumulated {
     get {
-      if (_accumulated == null)
-        _accumulated = keyAccum.ToString();
       return _accumulated;
     }
     private set {
@@ -57,7 +56,7 @@ public class KeySequence {
     if (! enabled)
       return;
     keyAccum.Append(c);
-    var key = accumulated = keyAccum.ToString();
+    var key = this.accumulated = keyAccum.ToString();
     if (TryGetValue(key, out var action, out bool hasPrefix)) {
       // We have a key.
       if (overrideAction != null)
@@ -76,8 +75,11 @@ public class KeySequence {
         return;
       }
     }
-    if (! hasPrefix)
+
+    if (! hasPrefix) {
       keyAccum.Clear();
+      // this.accumulated = "";
+    }
   }
 }
 }
