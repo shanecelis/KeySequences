@@ -12,12 +12,27 @@ public class KeySequence {
   private StringBuilder keyAccum = new StringBuilder();
   public Action<string> defaultAction = null;
   public Action<string> overrideAction = null;
+  public event PropertyChangedEventHandler propertyChanged;
+
   public bool enabled { get; private set; } = false;
 
   public void Enable() => enabled = true;
   public void Disable() => enabled = false;
 
-  public string accumulated => keyAccum.ToString();
+  private string _accumulated;
+  public string accumulated {
+    get {
+      if (_accumulated == null)
+        _accumulated = keyAccum.ToString();
+      return _accumulated;
+    }
+    private set {
+      if (_accumulated != value) {
+        _accumulated = value;
+        propertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(accumulated)));
+      }
+    }
+  }
 
   public Action<string> this[string key] {
     get => trie.ValueBy(key);
@@ -42,7 +57,7 @@ public class KeySequence {
     if (! enabled)
       return;
     keyAccum.Append(c);
-    var key = keyAccum.ToString();
+    var key = accumulated = keyAccum.ToString();
     if (TryGetValue(key, out var action, out bool hasPrefix)) {
       // We have a key.
       if (overrideAction != null)
