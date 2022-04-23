@@ -6,13 +6,21 @@ using UnityEngine.TestTools;
 using SeawispHunter.KeySequences;
 
 namespace SeawispHunter.KeySequences.Tests {
-  public class AccumulatorTest {
-    private KeySequencerMap ks;
-    private Dictionary<string, int> counts;
-    [SetUp]
-    public void Setup() {
+  public class AccumulatorMapTest : AccumulatorTest {
+    public override void Setup() {
       ks = new KeySequencerMap();
       counts = new Dictionary<string, int>();
+      ks.defaultAction += IncrCounter;
+    }
+  }
+  public class AccumulatorTest {
+    protected IKeySequencer ks;
+    protected Dictionary<string, int> counts;
+    [SetUp]
+    public virtual void Setup() {
+      ks = new KeySequencer();
+      counts = new Dictionary<string, int>();
+      ks.defaultAction += IncrCounter;
     }
 
     void SetupAbc() {
@@ -31,10 +39,12 @@ namespace SeawispHunter.KeySequences.Tests {
     }
 
     private void AddCounter(string key) {
-      ks[key] = IncrCounter;
+      ks.Add(key);
+      // ks[key] = IncrCounter;
     }
 
-    private void IncrCounter(string key) {
+    protected void IncrCounter(string key) {
+      // Debug.Log("IncrCounter " + key);
       if (! counts.TryGetValue(key, out int count))
         count = 0;
       counts[key] = ++count;
@@ -42,6 +52,24 @@ namespace SeawispHunter.KeySequences.Tests {
 
     private void AccumEqual(string key) {
       Assert.AreEqual(key, ks.accumulated);
+    }
+
+    [Test]
+    public void TestAddKey() {
+      if (ks is KeySequencerMap ksm) {
+        Assert.IsFalse(ks.HasKey("a"));
+        ksm.Add("a", key => { ; });
+        Assert.IsTrue(ks.HasKey("a"));
+      }
+    }
+
+    [Test]
+    public void TestAddKeyWithNullValue() {
+      if (ks is KeySequencerMap ksm) {
+        Assert.IsFalse(ks.HasKey("a"));
+        ksm.Add("a", null);
+        Assert.IsTrue(ks.HasKey("a"));
+      }
     }
 
     [Test]
@@ -70,7 +98,7 @@ namespace SeawispHunter.KeySequences.Tests {
 
     [Test]
     public void TestSetAction() {
-      ks["a"] = IncrCounter;
+      ks.Add("a");
       ks.Enable();
       AccumEqual("");
       Assert.AreEqual(0, GetCount("a"));
@@ -84,7 +112,7 @@ namespace SeawispHunter.KeySequences.Tests {
 
     [Test]
     public void TestAddAction() {
-      ks["a"] += IncrCounter;
+      ks.Add("a");
       ks.Enable();
       AccumEqual("");
       Assert.AreEqual(0, GetCount("a"));
@@ -98,8 +126,8 @@ namespace SeawispHunter.KeySequences.Tests {
 
     [Test]
     public void TestAddMultipleAction() {
-      ks["a"] += IncrCounter;
-      ks["a"] += IncrCounter;
+      ks.Add("a");
+      ks.defaultAction += IncrCounter;
       ks.Enable();
       Assert.AreEqual(0, GetCount("a"));
       ks.OnTextInput('b');
@@ -110,18 +138,18 @@ namespace SeawispHunter.KeySequences.Tests {
 
     [Test]
     public void TestRemoveAction() {
-      ks["a"] += IncrCounter;
-      ks["a"] += IncrCounter;
+      ks.Add("a");
+      ks.defaultAction += IncrCounter;
       ks.Enable();
       Assert.AreEqual(0, GetCount("a"));
       ks.OnTextInput('b');
       Assert.AreEqual(0, GetCount("a"));
       ks.OnTextInput('a');
       Assert.AreEqual(2, GetCount("a"));
-      ks["a"] -= IncrCounter;
+      ks.defaultAction -= IncrCounter;
       ks.OnTextInput('a');
       Assert.AreEqual(3, GetCount("a"));
-      ks["a"] -= IncrCounter;
+      ks.defaultAction -= IncrCounter;
       ks.OnTextInput('a');
       Assert.AreEqual(3, GetCount("a"));
     }
