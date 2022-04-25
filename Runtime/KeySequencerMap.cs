@@ -11,8 +11,8 @@ namespace SeawispHunter.KeySequences {
 public class KeySequencerMap : IKeySequencer {
   TrieMap<Action<string>> trie = new TrieMap<Action<string>>();
   private StringBuilder keyAccum = new StringBuilder();
-  public event Action<string> defaultAction = null;
-  public event Action<string> rejectAction = null;
+  public event Action<string> accept = null;
+  public event Action<string> reject = null;
   public event PropertyChangedEventHandler propertyChanged;
 
   public bool enabled { get; private set; } = false;
@@ -46,9 +46,9 @@ public class KeySequencerMap : IKeySequencer {
     trie.Add(key, action);
   }
 
-  public bool HasKey(string key) => trie.HasKey(key);
+  public bool HasKeys(string key) => trie.HasKey(key);
 
-  public bool HasKeyPrefix(string key) => trie.HasKeyPrefix(key);
+  public bool HasPrefix(string key) => trie.HasKeyPrefix(key);
 
   public bool TryGetValue(string key, out Action<string> action, out bool hasPrefix) {
     hasPrefix = trie.HasKeyPrefix(key);
@@ -65,12 +65,12 @@ public class KeySequencerMap : IKeySequencer {
       // We have a key.
       if (action != null)
         action(key);
-      else if (defaultAction != null)
-        defaultAction(key);
+      else if (accept != null)
+        accept(key);
     } else if (! hasPrefix) {
       // No key and no prefix.
-      if (rejectAction != null)
-        rejectAction(key);
+      if (reject != null)
+        reject(key);
       accumulated = null;
       // We could be starting a new input.
       if (keyAccum.Length > 1) {

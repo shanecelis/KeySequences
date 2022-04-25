@@ -11,16 +11,19 @@ public class KeySequenceExample : MonoBehaviour {
   KeySequencerMap ks = new KeySequencerMap();
   public string[] keys;
   Label label;
-  // Start is called before the first frame update
+
   void OnEnable() {
     foreach (var key in keys)
       ks.Add(key);
     ks.Enable();
     Keyboard.current.onTextInput += ks.OnTextInput;
   }
+
   void OnDisable() {
+    ks.Disable();
     Keyboard.current.onTextInput -= ks.OnTextInput;
   }
+
   void Start() {
 #if ! ENABLE_INPUT_SYSTEM
     Debug.LogError("New input system required.");
@@ -28,7 +31,7 @@ public class KeySequenceExample : MonoBehaviour {
     Debug.Log("Using new input system.");
     var root = GetComponent<UIDocument>().rootVisualElement;
     label = root.Q<Label>();
-    ks.defaultAction += _key => Debug.Log("action " + _key);
+    ks.accept += _key => Debug.Log("action " + _key);
     ks.propertyChanged += OnPropertyChange;
 #endif
   }
