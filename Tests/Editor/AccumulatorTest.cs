@@ -10,7 +10,7 @@ namespace SeawispHunter.KeySequences.Tests {
     public override void Setup() {
       ks = new KeySequencerMap();
       counts = new Dictionary<string, int>();
-      ks.defaultAction += IncrCounter;
+      ks.accept += IncrCounter;
     }
   }
   public class AccumulatorTest {
@@ -20,7 +20,7 @@ namespace SeawispHunter.KeySequences.Tests {
     public virtual void Setup() {
       ks = new KeySequencer();
       counts = new Dictionary<string, int>();
-      ks.defaultAction += IncrCounter;
+      ks.accept += IncrCounter;
     }
 
     void SetupAbc() {
@@ -57,18 +57,18 @@ namespace SeawispHunter.KeySequences.Tests {
     [Test]
     public void TestAddKey() {
       if (ks is KeySequencerMap ksm) {
-        Assert.IsFalse(ks.HasKey("a"));
+        Assert.IsFalse(ks.HasKeys("a"));
         ksm.Add("a", key => { ; });
-        Assert.IsTrue(ks.HasKey("a"));
+        Assert.IsTrue(ks.HasKeys("a"));
       }
     }
 
     [Test]
     public void TestAddKeyWithNullValue() {
       if (ks is KeySequencerMap ksm) {
-        Assert.IsFalse(ks.HasKey("a"));
+        Assert.IsFalse(ks.HasKeys("a"));
         ksm.Add("a", null);
-        Assert.IsTrue(ks.HasKey("a"));
+        Assert.IsTrue(ks.HasKeys("a"));
       }
     }
 
@@ -127,7 +127,7 @@ namespace SeawispHunter.KeySequences.Tests {
     [Test]
     public void TestAddMultipleAction() {
       ks.Add("a");
-      ks.defaultAction += IncrCounter;
+      ks.accept += IncrCounter;
       ks.Enable();
       Assert.AreEqual(0, GetCount("a"));
       ks.OnTextInput('b');
@@ -139,17 +139,17 @@ namespace SeawispHunter.KeySequences.Tests {
     [Test]
     public void TestRemoveAction() {
       ks.Add("a");
-      ks.defaultAction += IncrCounter;
+      ks.accept += IncrCounter;
       ks.Enable();
       Assert.AreEqual(0, GetCount("a"));
       ks.OnTextInput('b');
       Assert.AreEqual(0, GetCount("a"));
       ks.OnTextInput('a');
       Assert.AreEqual(2, GetCount("a"));
-      ks.defaultAction -= IncrCounter;
+      ks.accept -= IncrCounter;
       ks.OnTextInput('a');
       Assert.AreEqual(3, GetCount("a"));
-      ks.defaultAction -= IncrCounter;
+      ks.accept -= IncrCounter;
       ks.OnTextInput('a');
       Assert.AreEqual(3, GetCount("a"));
     }

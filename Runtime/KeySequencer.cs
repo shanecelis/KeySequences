@@ -9,10 +9,10 @@ namespace SeawispHunter.KeySequences {
  This class was made to interoperate with Unity's InputSystem
  */
   public class KeySequencer : IKeySequencer {
-  Trie trie = new Trie();
+  protected Trie trie = new Trie();
   private StringBuilder keyAccum = new StringBuilder();
-  public event Action<string> accept = null;
-  public event Action<string> reject = null;
+  public event Action<string> accept;
+  public event Action<string> reject;
   public event PropertyChangedEventHandler propertyChanged;
 
   public bool enabled { get; private set; } = false;

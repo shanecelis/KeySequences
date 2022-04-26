@@ -4,9 +4,8 @@ using System.Text;
 using rm.Trie;
 
 namespace SeawispHunter.KeySequences {
-/* KeySequences
+/* KeySequencerMap
 
- This class was made to interoperate with Unity's InputSystem
  */
 public class KeySequencerMap : IKeySequencer {
   TrieMap<Action<string>> trie = new TrieMap<Action<string>>();
@@ -63,6 +62,8 @@ public class KeySequencerMap : IKeySequencer {
     var key = this.accumulated = keyAccum.ToString();
     if (TryGetValue(key, out var action, out bool hasPrefix)) {
       // We have a key.
+      // Q: Should the action override the accept or just do something too?
+      // Q: Should it return a bool to say it was handled?
       if (action != null)
         action(key);
       else if (accept != null)
