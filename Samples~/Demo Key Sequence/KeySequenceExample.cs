@@ -9,20 +9,17 @@ using System.ComponentModel;
 
 
 public class KeySequenceExample : MonoBehaviour {
-  KeySequencerMap<Action<string>> ks = new KeySequencerMap<Action<string>>();
-  public string[] keys;
+  public KeySequencerMapInt keySequencer;
   Label label;
 
   void OnEnable() {
-    foreach (var key in keys)
-      ks.Add(key);
-    ks.Enable();
-    Keyboard.current.onTextInput += ks.OnTextInput;
+    keySequencer.Enable();
+    Keyboard.current.onTextInput += keySequencer.OnTextInput;
   }
 
   void OnDisable() {
-    ks.Disable();
-    Keyboard.current.onTextInput -= ks.OnTextInput;
+    keySequencer.Disable();
+    Keyboard.current.onTextInput -= keySequencer.OnTextInput;
   }
 
   void Start() {
@@ -32,16 +29,15 @@ public class KeySequenceExample : MonoBehaviour {
     Debug.Log("Using new input system.");
     var root = GetComponent<UIDocument>().rootVisualElement;
     label = root.Q<Label>();
-    ks.accept += (_key, subAction) => {
-      Debug.Log("action " + _key);
-      subAction?.Invoke(_key);
+    keySequencer.accept += (_key, value) => {
+      Debug.Log($"action {_key} value {value}");
     };
-    ks.propertyChanged += OnPropertyChange;
+    keySequencer.propertyChanged += OnPropertyChange;
 #endif
   }
 
   void OnPropertyChange(object sender, PropertyChangedEventArgs args) {
-    label.text = "here " + ks.accumulated;
+    label.text = "here " + keySequencer.accumulated;
   }
 
 }
