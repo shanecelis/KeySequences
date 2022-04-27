@@ -2,12 +2,18 @@ using System;
 using System.ComponentModel;
 using System.Text;
 using rm.Trie;
+
+/** Strictly speaking this class doesn't depend on Unity. But to play nice with
+    the serialization system so it can be manipulated by Unity's editor we
+    support it.
+  */
 #if UNITY_2019_4_OR_NEWER
 using UnityEngine;
 #endif
 
 namespace SeawispHunter.KeySequences {
-/* KeySequencer
+/** KeySequencer listens to a stream of characters and fires events for key
+    sequence matches.
 
  */
 [Serializable]
