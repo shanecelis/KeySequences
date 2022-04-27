@@ -3,14 +3,59 @@ using System.ComponentModel;
 using System.Text;
 using rm.Trie;
 
-namespace SeawispHunter.KeySequences {
-/* KeySequencerMap
+#if UNITY_2019_4_OR_NEWER
+using UnityEngine;
+#endif
 
+namespace SeawispHunter.KeySequences {
+
+[Serializable]
+public class KeySequencerMapInt : KeySequencerMap<int> { }
+/** KeySequencerMap is similar to KeySequencer but each key sequence accepts
+    a value that will be passed to the accept method.
+
+    Because of the generic type, this is not as easy to embed in a Unity
+    MonoBehaviour script. Only concrete types will be shown in the inspector, so
+    one will have to do something like this:
+
+    ```
+    [Serializable] public class KeySequencerMapFloat : KeySequencerMap<float> { }
+    ```
+
+    In order to not get double nesting in the inspector, add the new class to
+    the KeySequencerDrawer class like so:
+
+    ```
+    [CustomPropertyDrawer(typeof(KeySequencerMapFloat))]
+    [CustomPropertyDrawer(typeof(KeySequencer))]
+    public class KeySequencerDrawer : PropertyDrawer {
+    ...
+    ```
  */
-public class KeySequencerMap<T> : IKeySequencer<T> {
+[Serializable]
+public class KeySequencerMap<T> : IKeySequencer<T>
+#if UNITY_2019_4_OR_NEWER
+  , ISerializationCallbackReceiver
+#endif
+{
+
+#if UNITY_2019_4_OR_NEWER
+  [Serializable]
+  internal struct Entry {
+    [SerializeField]
+    internal string keys;
+    [SerializeField]
+    internal T value;
+  }
+  [SerializeField]
+  private Entry[] keySequences;
+#endif
+  [NonSerialized]
   TrieMap<T> trie = new TrieMap<T>();
+  [NonSerialized]
   private StringBuilder keyAccum = new StringBuilder();
 
+  [NonSerialized]
   private Action<string> _accept;
   event Action<string> IKeySequencer.accept {
     add {
@@ -29,6 +74,7 @@ public class KeySequencerMap<T> : IKeySequencer<T> {
   public void Enable() => enabled = true;
   public void Disable() => enabled = false;
 
+  [NonSerialized]
   private string _accumulated;
   public string accumulated {
     get {
@@ -52,8 +98,12 @@ public class KeySequencerMap<T> : IKeySequencer<T> {
   }
 
   public void Add(string key, T value) {
+    if (trie.HasKey(key))
+      throw new ArgumentException($"The key sequence {key} is already present. Use index notation to overwrite existing keys.", nameof(key));
     trie.Add(key, value);
   }
+
+  public void Remove(string keys) => trie.Remove(keys);
 
   public bool HasKeys(string key) => trie.HasKey(key);
 
@@ -98,6 +148,16 @@ public class KeySequencerMap<T> : IKeySequencer<T> {
       // this.accumulated = "";
     }
   }
+
+#if UNITY_2019_4_OR_NEWER
+  public void OnBeforeSerialize() {
+  }
+
+  public void OnAfterDeserialize() {
+    foreach (var keySequence in keySequences)
+      this.Add(keySequence.keys, keySequence.value);
+  }
+#endif
 }
 }
 
