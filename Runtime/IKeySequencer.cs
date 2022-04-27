@@ -49,4 +49,16 @@ public interface IKeySequencer {
   event PropertyChangedEventHandler propertyChanged;
 
 }
+
+public interface IKeySequencer<T> : IKeySequencer {
+
+  /** Add a key sequence. */
+  void Add(string keys, T value);
+
+  /** Call this event when a key sequence has been input. */
+  new event Action<string, T> accept;
+
+  T this[string key] { get; set; }
+
+}
 }

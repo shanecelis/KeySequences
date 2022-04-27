@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,7 +9,7 @@ using System.ComponentModel;
 
 
 public class KeySequenceExample : MonoBehaviour {
-  KeySequencerMap ks = new KeySequencerMap();
+  KeySequencerMap<Action<string>> ks = new KeySequencerMap<Action<string>>();
   public string[] keys;
   Label label;
 
@@ -31,7 +32,10 @@ public class KeySequenceExample : MonoBehaviour {
     Debug.Log("Using new input system.");
     var root = GetComponent<UIDocument>().rootVisualElement;
     label = root.Q<Label>();
-    ks.accept += _key => Debug.Log("action " + _key);
+    ks.accept += (_key, subAction) => {
+      Debug.Log("action " + _key);
+      subAction?.Invoke(_key);
+    };
     ks.propertyChanged += OnPropertyChange;
 #endif
   }
