@@ -3,8 +3,9 @@ using System.ComponentModel;
 
 namespace SeawispHunter.KeySequences {
 
-/** Given a stream of key sequences represented by char, fire accept event on
-    added key sequences, and fire reject event on key sequences with no match.
+/** Given a collection of key sequences and a stream of key sequences
+    represented by char, fire accept event on matching key sequences. Can also
+    fire reject event on key sequences with no match.
 
     Note: Implementation suggested to use a trie for performance benefits.
   */
@@ -18,8 +19,11 @@ public interface IKeySequencer {
   /** Disable the sequencer. */
   void Disable();
 
-  /** Add a key sequence. */
+  /** Add a key sequence. Throws an exception if the key sequence is already present. */
   void Add(string keys);
+
+  /** Remove a key sequence. Throws an exception if the key sequence is not present. */
+  void Remove(string keys);
 
   /** Return true if this object has the `keys` key sequence. */
   bool HasKeys(string keys);
@@ -50,14 +54,16 @@ public interface IKeySequencer {
 
 }
 
+/** A key sequencer with a little more information. */
 public interface IKeySequencer<T> : IKeySequencer {
 
-  /** Add a key sequence. */
+  /** Add a key sequence and value. Throws an exception if the key sequence is already present. */
   void Add(string keys, T value);
 
   /** Call this event when a key sequence has been input. */
   new event Action<string, T> accept;
 
+  /** Set a key sequence to a value. */
   T this[string key] { get; set; }
 
 }
