@@ -2,14 +2,27 @@ using System;
 using System.ComponentModel;
 using System.Text;
 using rm.Trie;
+#if UNITY_2019_4_OR_NEWER
+using UnityEngine;
+#endif
 
 namespace SeawispHunter.KeySequences {
-/* KeySequences
+/* KeySequencer
 
- This class was made to interoperate with Unity's InputSystem
  */
-  public class KeySequencer : IKeySequencer {
+[Serializable]
+public class KeySequencer : IKeySequencer
+#if UNITY_2019_4_OR_NEWER
+  , ISerializationCallbackReceiver
+#endif
+{
+#if UNITY_2019_4_OR_NEWER
+  [SerializeField]
+  private string[] keySequences;
+#endif
+  [NonSerialized]
   protected Trie trie = new Trie();
+  [NonSerialized]
   private StringBuilder keyAccum = new StringBuilder();
   public event Action<string> accept;
   public event Action<string> reject;
@@ -20,6 +33,7 @@ namespace SeawispHunter.KeySequences {
   public void Enable() => enabled = true;
   public void Disable() => enabled = false;
 
+  [NonSerialized]
   private string _accumulated;
   public string accumulated {
     get {
@@ -32,10 +46,10 @@ namespace SeawispHunter.KeySequences {
       }
     }
   }
+  public int Count => trie.Count();
 
-  public void Add(string key) {
-    trie.AddWord(key);
-  }
+  // XXX: AddKeys?
+  public void Add(string key) => trie.AddWord(key);
 
   public bool HasKeys(string key) => trie.HasWord(key);
 
@@ -75,6 +89,16 @@ namespace SeawispHunter.KeySequences {
       // this.accumulated = "";
     }
   }
+
+#if UNITY_2019_4_OR_NEWER
+  public void OnBeforeSerialize() {
+  }
+
+  public void OnAfterDeserialize() {
+    foreach (var keySequence in keySequences)
+      this.Add(keySequence);
+  }
+#endif
 }
 }
 
