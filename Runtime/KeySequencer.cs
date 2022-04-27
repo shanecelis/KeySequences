@@ -55,9 +55,15 @@ public class KeySequencer : IKeySequencer
   public int Count => trie.Count();
 
   // XXX: AddKeys?
-  public void Add(string key) => trie.AddWord(key);
+  public void Add(string key) {
+    if (trie.HasWord(key))
+      throw new ArgumentException($"The key sequence {key} is already present. Use index notation to overwrite existing keys.", nameof(key));
+    trie.AddWord(key);
+  }
 
   public bool HasKeys(string key) => trie.HasWord(key);
+
+  public void Remove(string keys) => trie.RemoveWord(keys);
 
   public bool HasPrefix(string key) => trie.HasPrefix(key);
 
