@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
 using rm.Trie;
@@ -12,23 +11,13 @@ public class KeySequencerMap<T> : IKeySequencer<T> {
   TrieMap<T> trie = new TrieMap<T>();
   private StringBuilder keyAccum = new StringBuilder();
 
-  private Dictionary<Action<string>, Action<string, T>> acceptors;
+  private Action<string> _accept;
   event Action<string> IKeySequencer.accept {
     add {
-      if (acceptors == null)
-        acceptors = new Dictionary<Action<string>, Action<string, T>>();
-
-      this.accept += acceptors[value] = (s, _) => value(s);
+      this._accept += value;
     }
     remove {
-      if (acceptors != null && acceptors.TryGetValue(value, out var acceptDelegate))
-        this.accept -= acceptDelegate;
-      else {
-        /* XXX: This is not guaranteed to work since the lambdas may in fact be
-           different, which is why we try to keep track of the delegates we
-           make. */
-        this.accept -= (s, _) => value(s);
-      }
+      this._accept -= value;
     }
   }
   public event Action<string, T> accept;
@@ -87,6 +76,8 @@ public class KeySequencerMap<T> : IKeySequencer<T> {
       // Q: Should it return a bool to say it was handled?
       if (accept != null)
         accept(key, value);
+      if (_accept != null)
+        _accept(key);
     } else if (! hasPrefix) {
       // No key and no prefix.
       if (reject != null)
