@@ -7,11 +7,30 @@ using SeawispHunter.KeySequences;
 
 namespace SeawispHunter.KeySequences.Tests {
   public class AccumulatorMapTest : AccumulatorTest {
+
+    KeySequencerMap<object> ksm;
     public override void Setup() {
-      ks = new KeySequencerMap();
+      ks = ksm = new KeySequencerMap<object>();
       counts = new Dictionary<string, int>();
       ks.accept += IncrCounter;
     }
+
+    [Test]
+    public void TestAddKey() {
+      Assert.IsFalse(ks.HasKeys("a"));
+      ksm.Add("a", 1);
+      Assert.AreEqual(1, ksm["a"]);
+      Assert.IsTrue(ks.HasKeys("a"));
+    }
+
+    [Test]
+    public void TestAddKeyWithNullValue() {
+      Assert.IsFalse(ks.HasKeys("a"));
+      ksm.Add("a", null);
+      Assert.AreEqual(null, ksm["a"]);
+      Assert.IsTrue(ks.HasKeys("a"));
+    }
+
   }
   public class AccumulatorTest {
     protected IKeySequencer ks;
@@ -52,24 +71,6 @@ namespace SeawispHunter.KeySequences.Tests {
 
     private void AccumEqual(string key) {
       Assert.AreEqual(key, ks.accumulated);
-    }
-
-    [Test]
-    public void TestAddKey() {
-      if (ks is KeySequencerMap ksm) {
-        Assert.IsFalse(ks.HasKeys("a"));
-        ksm.Add("a", key => { ; });
-        Assert.IsTrue(ks.HasKeys("a"));
-      }
-    }
-
-    [Test]
-    public void TestAddKeyWithNullValue() {
-      if (ks is KeySequencerMap ksm) {
-        Assert.IsFalse(ks.HasKeys("a"));
-        ksm.Add("a", null);
-        Assert.IsTrue(ks.HasKeys("a"));
-      }
     }
 
     [Test]
