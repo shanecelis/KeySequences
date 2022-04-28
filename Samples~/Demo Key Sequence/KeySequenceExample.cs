@@ -5,7 +5,6 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using SeawispHunter.KeySequences;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.Utilities;
 using System.ComponentModel;
 
 public class KeySequenceExample : MonoBehaviour {
@@ -23,8 +22,6 @@ public class KeySequenceExample : MonoBehaviour {
   }
 
   void Start() {
-    foreach (var device in InputSystem.devices)
-      Debug.Log("device " + device);
 #if ! ENABLE_INPUT_SYSTEM
     Debug.LogError("New input system required.");
 #else
@@ -36,17 +33,6 @@ public class KeySequenceExample : MonoBehaviour {
     };
     keySequencer.propertyChanged += OnPropertyChange;
 #endif
-    // Response to the first button press. Calls our delegate
-// and then immediately stops listening.
-    // InputSystem.onAnyButtonPress
-    //            .CallOnce(ctrl => Debug.Log($"Button {ctrl} was pressed"));
-    InputSystem.onEvent
-               .Where(e => e.HasButtonPress())
-               .CallOnce(eventPtr =>
-                         {
-                           foreach (var button in eventPtr.GetAllButtonPresses())
-                             Debug.Log($"Button {button} was pressed");
-                         });
   }
 
   void OnPropertyChange(object sender, PropertyChangedEventArgs args) {
