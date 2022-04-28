@@ -33,7 +33,7 @@ public class KeySequencerMapExample : MonoBehaviour {
     Debug.Log("Using new input system.");
     // Debug.Log($"There are {keySequences.Count} key sequences.");
     keySequences.accept += (_key, value) => {
-      var msg = $"action {_key} value {value}";
+      var msg = $"ACCEPT {_key} value {value}";
       Debug.Log(msg);
       label.text = msg;
     };

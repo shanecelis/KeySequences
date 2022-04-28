@@ -7,7 +7,7 @@ using System.ComponentModel;
 using UnityEngine.InputSystem;
 
 public class InputSystemExample : MonoBehaviour {
-  public KeySequencerMapInt keySequences;
+  public KeySequencer keySequences;
   public Text label;
 
   void OnEnable() {
@@ -32,8 +32,8 @@ public class InputSystemExample : MonoBehaviour {
 #else
     Debug.Log("Using new input system.");
     // Debug.Log($"There are {keySequences.Count} key sequences.");
-    keySequences.accept += (_key, value) => {
-      var msg = $"action {_key} value {value}";
+    keySequences.accept += (_key) => {
+      var msg = $"ACCEPT {_key}";
       Debug.Log(msg);
       label.text = msg;
     };

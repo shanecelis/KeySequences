@@ -23,7 +23,11 @@ public class InputManagerExample : MonoBehaviour {
 #else
     Debug.Log("Using old input system.");
     Debug.Log($"There are {keySequences.Count} key sequences.");
-    keySequences.accept += _key => Debug.Log("action " + _key);
+    keySequences.accept += _key => {
+      var msg = "ACCEPT " + _key;
+      Debug.Log(msg);
+      label.text = msg;
+    };
     keySequences.propertyChanged += OnPropertyChange;
 #endif
   }
