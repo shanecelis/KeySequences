@@ -86,13 +86,9 @@ KeySequencer is disabled by default like Unity's InputAction. And all the handli
 
 Finally, one has to setup the input to the KeySequencer. One can do this with the new InputSystem or the legacy InputManager.
 
-#### Using New InputSystem
-
-``` c#
-Keyboard.current.onTextInput += keySequences.Input;
-```
-
 #### Using Legacy InputManager
+
+Sample "0 Demo" demonstrates using the legacy InputManager.
 
 ``` c#
 void Update() {
@@ -100,6 +96,15 @@ void Update() {
     keySequences.Input(c);
 }
 ```
+
+#### Using New InputSystem
+
+Sample "1 Demo" demonstrates using the new InputSystem.
+
+``` c#
+Keyboard.current.onTextInput += keySequences.Input;
+```
+
 
 ### Show Accumulated Input
 
@@ -111,6 +116,14 @@ keySequences.propertyChanged += (sender, args) => label.text = keySequences.accu
 ```
 
 Note: Non-printing characters in this case will be vexing.
+
+## KeySequencerMap
+
+KeySequencer only provides one argument when a key sequence is found, that is the key sequence itself. In principle this is sufficient for any acceptance action one likes. But as a convenience there is also a `KeySequencerMap<T>` class. 
+
+See sample "2 demo" which demonstrates how to setup a KeySequencerMap<int> that will work with Unity's inspector.
+
+![Key sequences map in inspector](Documentation~/keySequencesMapInspector.png)
 
 ## Design Notes
 
