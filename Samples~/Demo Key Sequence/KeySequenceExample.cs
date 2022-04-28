@@ -7,19 +7,18 @@ using SeawispHunter.KeySequences;
 using UnityEngine.InputSystem;
 using System.ComponentModel;
 
-
 public class KeySequenceExample : MonoBehaviour {
   public KeySequencerMapInt keySequencer;
   Label label;
 
   void OnEnable() {
     keySequencer.Enable();
-    Keyboard.current.onTextInput += keySequencer.OnTextInput;
+    Keyboard.current.onTextInput += keySequencer.Input;
   }
 
   void OnDisable() {
     keySequencer.Disable();
-    Keyboard.current.onTextInput -= keySequencer.OnTextInput;
+    Keyboard.current.onTextInput -= keySequencer.Input;
   }
 
   void Start() {

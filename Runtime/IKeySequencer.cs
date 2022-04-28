@@ -37,7 +37,7 @@ public interface IKeySequencer {
   string accumulated { get; }
 
   /** Provide an input to the sequencer. */
-  void OnTextInput(char c);
+  void Input(char c);
 
   /** Call this event when a key sequence has been input. */
   event Action<string> accept;
