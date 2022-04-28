@@ -51,13 +51,16 @@ https://github.com/shanecelis/KeySequences.git
 Here's an example of using KeySequencer setup purely with code.
 
 ``` c#
+// Setup.
 var keySequences = new KeySequencer();
 keySequences.Add("abc");
 keySequences.Add("gg");
 keySequences.accept += keys => Debug.Log($"Got {keys}.");
 keySequences.Enable();
-keySequences.OnTextInput('g');
-keySequences.OnTextInput('g'); // Logs "Got gg."
+
+// Send input.
+keySequences.Input('g');
+keySequences.Input('g'); // Logs "Got gg."
 ```
 
 ### On a MonoBehaviour
@@ -86,7 +89,7 @@ Finally, one has to setup the input to the KeySequencer. One can do this with th
 #### Using New InputSystem
 
 ``` c#
-Keyboard.current.onTextInput += keySequences.OnTextInput;
+Keyboard.current.onTextInput += keySequences.Input;
 ```
 
 #### Using Legacy InputManager
@@ -94,7 +97,7 @@ Keyboard.current.onTextInput += keySequences.OnTextInput;
 ``` c#
 void Update() {
   foreach (char c in Input.inputString)
-    keySequences.OnTextInput(c);
+    keySequences.Input(c);
 }
 ```
 

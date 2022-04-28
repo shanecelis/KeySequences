@@ -80,17 +80,17 @@ namespace SeawispHunter.KeySequences.Tests {
       Assert.AreEqual(0, GetCount("ab"));
       Assert.AreEqual(0, GetCount("abc"));
       AccumEqual("");
-      ks.OnTextInput('a');
+      ks.Input('a');
       AccumEqual("a");
       Assert.AreEqual(1, GetCount("a"));
       Assert.AreEqual(0, GetCount("ab"));
       Assert.AreEqual(0, GetCount("abc"));
-      ks.OnTextInput('z');
+      ks.Input('z');
       AccumEqual("");
       Assert.AreEqual(1, GetCount("a"));
       Assert.AreEqual(0, GetCount("ab"));
       Assert.AreEqual(0, GetCount("abc"));
-      ks.OnTextInput('b');
+      ks.Input('b');
       AccumEqual("");
       Assert.AreEqual(1, GetCount("a"));
       Assert.AreEqual(0, GetCount("ab"));
@@ -103,10 +103,10 @@ namespace SeawispHunter.KeySequences.Tests {
       ks.Enable();
       AccumEqual("");
       Assert.AreEqual(0, GetCount("a"));
-      ks.OnTextInput('b');
+      ks.Input('b');
       AccumEqual("");
       Assert.AreEqual(0, GetCount("a"));
-      ks.OnTextInput('a');
+      ks.Input('a');
       AccumEqual("a");
       Assert.AreEqual(1, GetCount("a"));
     }
@@ -117,10 +117,10 @@ namespace SeawispHunter.KeySequences.Tests {
       ks.Enable();
       AccumEqual("");
       Assert.AreEqual(0, GetCount("a"));
-      ks.OnTextInput('b');
+      ks.Input('b');
       AccumEqual("");
       Assert.AreEqual(0, GetCount("a"));
-      ks.OnTextInput('a');
+      ks.Input('a');
       AccumEqual("a");
       Assert.AreEqual(1, GetCount("a"));
     }
@@ -131,9 +131,9 @@ namespace SeawispHunter.KeySequences.Tests {
       ks.accept += IncrCounter;
       ks.Enable();
       Assert.AreEqual(0, GetCount("a"));
-      ks.OnTextInput('b');
+      ks.Input('b');
       Assert.AreEqual(0, GetCount("a"));
-      ks.OnTextInput('a');
+      ks.Input('a');
       Assert.AreEqual(2, GetCount("a"));
     }
 
@@ -143,15 +143,15 @@ namespace SeawispHunter.KeySequences.Tests {
       ks.accept += IncrCounter;
       ks.Enable();
       Assert.AreEqual(0, GetCount("a"));
-      ks.OnTextInput('b');
+      ks.Input('b');
       Assert.AreEqual(0, GetCount("a"));
-      ks.OnTextInput('a');
+      ks.Input('a');
       Assert.AreEqual(2, GetCount("a"));
       ks.accept -= IncrCounter;
-      ks.OnTextInput('a');
+      ks.Input('a');
       Assert.AreEqual(3, GetCount("a"));
       ks.accept -= IncrCounter;
-      ks.OnTextInput('a');
+      ks.Input('a');
       Assert.AreEqual(3, GetCount("a"));
     }
 
@@ -162,17 +162,17 @@ namespace SeawispHunter.KeySequences.Tests {
       Assert.AreEqual(0, GetCount("ab"));
       Assert.AreEqual(0, GetCount("abc"));
       AccumEqual("");
-      ks.OnTextInput('a');
+      ks.Input('a');
       AccumEqual("a");
       Assert.AreEqual(1, GetCount("a"));
       Assert.AreEqual(0, GetCount("ab"));
       Assert.AreEqual(0, GetCount("abc"));
-      ks.OnTextInput('a');
+      ks.Input('a');
       AccumEqual("a");
       Assert.AreEqual(2, GetCount("a"));
       Assert.AreEqual(0, GetCount("ab"));
       Assert.AreEqual(0, GetCount("abc"));
-      ks.OnTextInput('b');
+      ks.Input('b');
       AccumEqual("ab");
       Assert.AreEqual(2, GetCount("a"));
       Assert.AreEqual(1, GetCount("ab"));
@@ -184,11 +184,11 @@ namespace SeawispHunter.KeySequences.Tests {
       Assert.AreEqual(0, GetCount("a"));
       Assert.AreEqual(0, GetCount("ab"));
       Assert.AreEqual(0, GetCount("abc"));
-      ks.OnTextInput('a');
+      ks.Input('a');
       Assert.AreEqual(1, GetCount("a"));
       Assert.AreEqual(0, GetCount("ab"));
       Assert.AreEqual(0, GetCount("abc"));
-      ks.OnTextInput('b');
+      ks.Input('b');
       Assert.AreEqual(1, GetCount("a"));
       Assert.AreEqual(1, GetCount("ab"));
       Assert.AreEqual(0, GetCount("abc"));
@@ -201,17 +201,17 @@ namespace SeawispHunter.KeySequences.Tests {
       Assert.AreEqual(0, GetCount("ab"));
       Assert.AreEqual(0, GetCount("abc"));
       AccumEqual("");
-      ks.OnTextInput('a');
+      ks.Input('a');
       AccumEqual("a");
       Assert.AreEqual(1, GetCount("a"));
       Assert.AreEqual(0, GetCount("ab"));
       Assert.AreEqual(0, GetCount("abc"));
-      ks.OnTextInput('b');
+      ks.Input('b');
       AccumEqual("ab");
       Assert.AreEqual(1, GetCount("a"));
       Assert.AreEqual(1, GetCount("ab"));
       Assert.AreEqual(0, GetCount("abc"));
-      ks.OnTextInput('a');
+      ks.Input('a');
       AccumEqual("a");
       Assert.AreEqual(2, GetCount("a"));
       Assert.AreEqual(1, GetCount("ab"));
@@ -225,29 +225,29 @@ namespace SeawispHunter.KeySequences.Tests {
       Assert.AreEqual(0, GetCount("ab"));
       Assert.AreEqual(0, GetCount("abc"));
       AccumEqual("");
-      ks.OnTextInput('a');
+      ks.Input('a');
       AccumEqual("a");
       Assert.AreEqual(1, GetCount("a"));
       Assert.AreEqual(0, GetCount("ab"));
       Assert.AreEqual(0, GetCount("abc"));
-      ks.OnTextInput('b');
+      ks.Input('b');
       AccumEqual("ab");
       Assert.AreEqual(1, GetCount("a"));
       Assert.AreEqual(1, GetCount("ab"));
       Assert.AreEqual(0, GetCount("abc"));
-      ks.OnTextInput('c');
+      ks.Input('c');
       AccumEqual("abc");
       Assert.AreEqual(1, GetCount("a"));
       Assert.AreEqual(1, GetCount("ab"));
       Assert.AreEqual(1, GetCount("abc"));
 
-      ks.OnTextInput('a');
+      ks.Input('a');
       AccumEqual("a");
       Assert.AreEqual(2, GetCount("a"));
       Assert.AreEqual(1, GetCount("ab"));
       Assert.AreEqual(1, GetCount("abc"));
 
-      ks.OnTextInput('a');
+      ks.Input('a');
       AccumEqual("a");
       Assert.AreEqual(3, GetCount("a"));
       Assert.AreEqual(1, GetCount("ab"));
@@ -259,10 +259,10 @@ namespace SeawispHunter.KeySequences.Tests {
       AddCounter("abcd");
       AddCounter("bc");
       ks.Enable();
-      ks.OnTextInput('a');
-      ks.OnTextInput('b');
-      ks.OnTextInput('c');
-      ks.OnTextInput('f');
+      ks.Input('a');
+      ks.Input('b');
+      ks.Input('c');
+      ks.Input('f');
       Assert.AreEqual(0, GetCount("abcd"));
       // XXX: Should bc actually get fired here?
       Assert.AreEqual(0, GetCount("bc"));

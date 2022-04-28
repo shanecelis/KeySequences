@@ -72,7 +72,7 @@ public class KeySequencer : IKeySequencer
     return trie.HasWord(key);
   }
 
-  public void OnTextInput(char c) {
+  public void Input(char c) {
     if (! enabled)
       return;
     keyAccum.Append(c);
@@ -91,7 +91,7 @@ public class KeySequencer : IKeySequencer
         // Re-evaluate with a clean slate.
         keyAccum.Clear();
         // Recurse. Will only ever be one call deep.
-        OnTextInput(c);
+        Input(c);
         return;
       }
     }
