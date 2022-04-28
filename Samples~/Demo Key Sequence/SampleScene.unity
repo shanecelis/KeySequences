@@ -183,11 +183,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03c06e9ab26cf409ca94cbf637ab9c0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  keys:
-  - a
-  - ab
-  - abc
-  - bce
+  keySequencer:
+    keySequences:
+    - keys: abc
+      value: 1
+    - keys: edf
+      value: 2
 --- !u!1 &422052921
 GameObject:
   m_ObjectHideFlags: 0
