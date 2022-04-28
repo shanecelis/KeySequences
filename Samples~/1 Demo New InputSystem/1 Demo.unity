@@ -581,10 +581,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   keySequences:
     keySequences:
-    - keys: abc
-      value: 0
-    - keys: efg
-      value: 1
+    - abc
+    - efg
   label: {fileID: 1526037286}
 --- !u!4 &1062360009
 Transform:
