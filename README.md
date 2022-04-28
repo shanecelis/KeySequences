@@ -134,7 +134,7 @@ See the sample scenes. While running, the scene each print the input character a
 
 ## TODO
 
-- Add to the KeySequenceDrawer class a way to record a key sequence similar to [InputAction](https://docs.unity3d.com/Packages/com.unity.inputsystem@1.0/api/UnityEngine.InputSystem.InputAction.html)'s listen button.
+- Add to the KeySequenceDrawer class a way to record a key sequence similar to [InputAction](https://docs.unity3d.com/Packages/com.unity.inputsystem@0.9/manual/ActionAssets.html#picking-controls)'s listen button.
 
 - Consider adding a global disable for use when [an input field is being used](https://forum.unity.com/threads/how-to-disable-movement-keys-when-typing-into-input-box.389942/#post-4333129).
 
