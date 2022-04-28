@@ -253,5 +253,19 @@ namespace SeawispHunter.KeySequences.Tests {
       Assert.AreEqual(1, GetCount("ab"));
       Assert.AreEqual(1, GetCount("abc"));
     }
+
+    [Test]
+    public void TestSubstringSequences() {
+      AddCounter("abcd");
+      AddCounter("bc");
+      ks.Enable();
+      ks.OnTextInput('a');
+      ks.OnTextInput('b');
+      ks.OnTextInput('c');
+      ks.OnTextInput('f');
+      Assert.AreEqual(0, GetCount("abcd"));
+      // XXX: Should bc actually get fired here?
+      Assert.AreEqual(0, GetCount("bc"));
+    }
   }
 }
