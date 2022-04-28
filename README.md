@@ -2,6 +2,8 @@
 
 Fire events for particular key sequences efficiently.
 
+![Key sequences video](Documentation~/example.gif)
+
 ## Motivation
 
 Key sequences have many uses: they can be used as cheat codes for a game at runtime, and they can be used as a minimalist UI during game development. 
@@ -62,9 +64,6 @@ keySequences.Enable();
 keySequences.Input('g');
 keySequences.Input('g'); // Logs "ACCEPT gg"
 ```
-
-
-![Key sequences video](Documentation~/example.gif)
 
 ### On a MonoBehaviour
 
