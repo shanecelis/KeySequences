@@ -4,7 +4,6 @@ using UnityEngine;
 namespace SeawispHunter.KeySequences {
 
 /** Only draw the `keySequences` element from the KeySequencer object. */
-[CustomPropertyDrawer(typeof(KeySequencerMapInt))]
 [CustomPropertyDrawer(typeof(KeySequencer))]
 public class KeySequencerDrawer : PropertyDrawer {
   public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {

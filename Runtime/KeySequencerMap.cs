@@ -9,8 +9,6 @@ using UnityEngine;
 
 namespace SeawispHunter.KeySequences {
 
-[Serializable]
-public class KeySequencerMapInt : KeySequencerMap<int> { }
 /** KeySequencerMap is similar to KeySequencer but each key sequence accepts
     a value that will be passed to the accept method.
 

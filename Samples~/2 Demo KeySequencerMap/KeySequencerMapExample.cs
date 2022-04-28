@@ -6,6 +6,25 @@ using UnityEngine.UI;
 using System.ComponentModel;
 using UnityEngine.InputSystem;
 
+
+/** Because of the generic type, this is not as easy to embed in a Unity
+    MonoBehaviour script. Only concrete types will be shown in the inspector, so
+    one will have to do something like this:
+*/
+[System.Serializable] public class KeySequencerMapInt : KeySequencerMap<int> { }
+
+#if UNITY_EDITOR
+
+
+/** To get a slightly nicer version in the inspector, one can add a drawer.
+
+    Technically, this should go into an Editor assembly, but since this is
+    merely a demo, we won't bother.
+*/
+[UnityEditor.CustomPropertyDrawer(typeof(KeySequencerMapInt))]
+public class KeySequencerMapIntDrawer : KeySequencerDrawer { }
+#endif
+
 public class KeySequencerMapExample : MonoBehaviour {
   public KeySequencerMapInt keySequences;
   public Text label;
