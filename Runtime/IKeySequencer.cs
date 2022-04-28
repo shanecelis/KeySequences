@@ -47,7 +47,7 @@ public interface IKeySequencer {
       Note: This is likely to be called many more times than accept. Consider
       leaving it null if the rejected candidates are not important.
    */
-  event Action<string> reject;
+  // event Action<string> reject;
 
   /** Called whenever `accumulated` is updated. */
   event PropertyChangedEventHandler propertyChanged;

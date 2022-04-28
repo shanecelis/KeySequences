@@ -31,7 +31,7 @@ public class KeySequencer : IKeySequencer
   [NonSerialized]
   private StringBuilder keyAccum = new StringBuilder();
   public event Action<string> accept;
-  public event Action<string> reject;
+  // public event Action<string> reject;
   public event PropertyChangedEventHandler propertyChanged;
 
   public bool enabled { get; private set; } = false;
@@ -83,8 +83,8 @@ public class KeySequencer : IKeySequencer
         accept(key);
     } else if (! hasPrefix) {
       // No key and no prefix.
-      if (reject != null)
-        reject(key);
+      // if (reject != null)
+      //   reject(key);
       accumulated = null;
       // We could be starting a new input.
       if (keyAccum.Length > 1) {

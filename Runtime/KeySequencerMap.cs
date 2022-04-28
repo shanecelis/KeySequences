@@ -64,7 +64,7 @@ public class KeySequencerMap<T> : IKeySequencer<T>
     }
   }
   public event Action<string, T> accept;
-  public event Action<string> reject;
+  // public event Action<string> reject;
   public event PropertyChangedEventHandler propertyChanged;
 
   public bool enabled { get; private set; } = false;
@@ -128,8 +128,8 @@ public class KeySequencerMap<T> : IKeySequencer<T>
         _accept(key);
     } else if (! hasPrefix) {
       // No key and no prefix.
-      if (reject != null)
-        reject(key);
+      // if (reject != null)
+      //   reject(key);
       accumulated = null;
       // We could be starting a new input.
       if (keyAccum.Length > 1) {
