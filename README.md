@@ -55,12 +55,12 @@ Here's an example of using KeySequencer setup purely with code.
 var keySequences = new KeySequencer();
 keySequences.Add("abc");
 keySequences.Add("gg");
-keySequences.accept += keys => Debug.Log($"Got {keys}.");
+keySequences.accept += keys => Debug.Log($"ACCEPT {keys}");
 keySequences.Enable();
 
 // Send input.
 keySequences.Input('g');
-keySequences.Input('g'); // Logs "Got gg."
+keySequences.Input('g'); // Logs "ACCEPT gg"
 ```
 
 ### On a MonoBehaviour
@@ -119,7 +119,22 @@ Note: Non-printing characters in this case will be vexing.
 
 ## KeySequencerMap
 
-KeySequencer only provides one argument when a key sequence is found, that is the key sequence itself. In principle this is sufficient for any acceptance action one likes. But as a convenience there is also a `KeySequencerMap<T>` class. 
+KeySequencer only provides one argument when a key sequence is found, that is the key sequence itself. In principle this is sufficient for any acceptance action one likes. But as a convenience there is also a `KeySequencerMap<T>` class. It works roughly the same but it includes a value.
+
+### Pure code
+
+``` c#
+// Setup.
+var keySequences = new KeySequencerMap<int>();
+keySequences.Add("abc", 100);
+keySequences.Add("gg", 200);
+keySequences.accept += (keys, value) => Debug.Log($"ACCEPT {keys} VALUE {value}");
+keySequences.Enable();
+
+// Send input.
+keySequences.Input('g');
+keySequences.Input('g'); // Logs "ACCEPT gg VALUE 200"
+```
 
 See sample "2 demo" which demonstrates how to setup a KeySequencerMap<int> that will work with Unity's inspector.
 
