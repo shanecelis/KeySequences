@@ -561,7 +561,7 @@ GameObject:
   - component: {fileID: 1062360009}
   - component: {fileID: 1062360008}
   m_Layer: 0
-  m_Name: Canvas Example
+  m_Name: Main
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -582,9 +582,9 @@ MonoBehaviour:
   keySequences:
     keySequences:
     - keys: abc
-      value: 0
-    - keys: efg
-      value: 0
+      value: 100
+    - keys: gg
+      value: 200
   label: {fileID: 1526037286}
 --- !u!4 &1062360009
 Transform:
