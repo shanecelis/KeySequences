@@ -20,12 +20,16 @@
   ],
   "samples": [
     {
-      "displayName": "Demo Key Sequence",
-      "path": "Samples~/Demo Key Sequence"
+      "displayName": "0 Demo Legacy InputManger",
+      "path": "Samples~/0 Demo Legacy InputManger"
     },
     {
-      "displayName": "Sample 2",
-      "path": "Samples~/Sample 2"
+      "displayName": "1 Demo New InputSystem",
+      "path": "Samples~/1 Demo New InputSystem"
+    },
+    {
+      "displayName": "2 Demo KeySequencerMap",
+      "path": "Samples~/2 Demo KeySequencerMap"
     }
   ]
 }
