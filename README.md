@@ -63,6 +63,9 @@ keySequences.Input('g');
 keySequences.Input('g'); // Logs "ACCEPT gg"
 ```
 
+
+![Key sequences video](Documentation~/example.gif)
+
 ### On a MonoBehaviour
 
 KeySequencer is designed to fit in with Unity's new InputSystem but also works with the legacy InputManager. To use with a MonoBehaviour, add a KeySequencer field.
