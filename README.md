@@ -45,12 +45,12 @@ https://github.com/shanecelis/KeySequences.git
 Here's an example of using KeySequencer setup purely with code.
 
 ``` c#
-var keySequencer = new KeySequencer();
-keySequencer.Add("gg");
-keySequencer.accept += keys => Debug.Log($"Got {keys}.");
-keySequencer.Enable();
-keySequencer.OnTextInput('g');
-keySequencer.OnTextInput('g'); // Logs "Got gg."
+var keySequences = new KeySequencer();
+keySequences.Add("gg");
+keySequences.accept += keys => Debug.Log($"Got {keys}.");
+keySequences.Enable();
+keySequences.OnTextInput('g');
+keySequences.OnTextInput('g'); // Logs "Got gg."
 ```
 
 ### On a MonoBehaviour
@@ -58,17 +58,18 @@ keySequencer.OnTextInput('g'); // Logs "Got gg."
 KeySequencer is designed to fit in with Unity's new InputSystem. To use with a MonoBehaviour, add a KeySequencer field.
 
 ``` c#
-[SerializeField] private KeySequencer keySequencer;
+[SerializeField] private KeySequencer keySequences;
 ```
 
 Setup the key sequences in the inspector.
 
+![Key sequences in inspector](Documentation~/keySequencesInspector.png)
 
 Enable and setup the handling in code.
 
 ``` c#
-keySequencer.accept += keys => Debug.Log($"Got {keys}.");
-keySequencer.Enable();
+keySequences.accept += keys => Debug.Log($"Got {keys}.");
+keySequences.Enable();
 ```
 
 Finally, one has to setup the input to the KeySequencer. One can do this with the new InputSystem or the legacy InputManager.
@@ -76,7 +77,7 @@ Finally, one has to setup the input to the KeySequencer. One can do this with th
 #### Using InputSystem
 
 ``` c#
-Keyboard.current.onTextInput += keySequencer.OnTextInput;
+Keyboard.current.onTextInput += keySequences.OnTextInput;
 ```
 
 #### Using Legacy InputManager
