@@ -107,6 +107,7 @@ public class KeySequencer : IKeySequencer
   }
 
   public void OnAfterDeserialize() {
+    trie.Clear();
     foreach (var keySequence in keySequences)
       this.Add(keySequence);
   }
