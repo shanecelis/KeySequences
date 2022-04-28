@@ -1,6 +1,6 @@
 # KeySequences README
 
-Fire events on particular key sequences.
+Fire events on particular key sequences efficiently.
 
 ## Motivation
 
@@ -27,6 +27,8 @@ Key sequences alleviate some of these issues by allowing mnemonics to group oper
 | do           | Door open      |
 | dc           | Door close     |
 | dl           | Door lock      |
+
+KeySequencer also focuses on providing an efficient implementation. It uses a [Trie](https://en.wikipedia.org/wiki/Trie) to detect whether the accumulated characters have any possible matches. If no key sequences are possible, the accumulated characters are discarded.
 
 ## Requirements
 
@@ -55,7 +57,7 @@ keySequences.OnTextInput('g'); // Logs "Got gg."
 
 ### On a MonoBehaviour
 
-KeySequencer is designed to fit in with Unity's new InputSystem. To use with a MonoBehaviour, add a KeySequencer field.
+KeySequencer is designed to fit in with Unity's new InputSystem but also works with the legacy InputManager. To use with a MonoBehaviour, add a KeySequencer field.
 
 ``` c#
 [SerializeField] private KeySequencer keySequences;
@@ -74,7 +76,7 @@ keySequences.Enable();
 
 Finally, one has to setup the input to the KeySequencer. One can do this with the new InputSystem or the legacy InputManager.
 
-#### Using InputSystem
+#### Using New InputSystem
 
 ``` c#
 Keyboard.current.onTextInput += keySequences.OnTextInput;
@@ -107,11 +109,13 @@ So there are certainly limitations but that's one of the costs of keeping someth
 
 ### How do I find the right char for non-printing characters?
 
-See the samples. They each print the input character and its integer value.
+See the samples. While running, they each print the input character and its integer value.
 
 ## TODO
 
-- Add KeySequenceDrawer class a way to record a key sequence similar to [InputAction](https://docs.unity3d.com/Packages/com.unity.inputsystem@1.0/api/UnityEngine.InputSystem.InputAction.html)'s listen button.
+- Add to the KeySequenceDrawer class a way to record a key sequence similar to [InputAction](https://docs.unity3d.com/Packages/com.unity.inputsystem@1.0/api/UnityEngine.InputSystem.InputAction.html)'s listen button.
+
+- Consider adding a global disable for use when [an input field is being used](https://forum.unity.com/threads/how-to-disable-movement-keys-when-typing-into-input-box.389942/#post-4333129).
 
 ## Acknowledgements
 
