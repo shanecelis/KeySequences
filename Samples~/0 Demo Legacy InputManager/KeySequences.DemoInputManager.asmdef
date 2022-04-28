@@ -1,5 +1,5 @@
 {
-    "name": "KeySequence.CanvasExample",
+    "name": "KeySequence.DemoInputManager",
     "rootNamespace": "",
     "references": [
         "GUID:3ddeaac48c5f44f3b9d5d22e46ac8424"

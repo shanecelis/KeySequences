@@ -5,7 +5,7 @@ using SeawispHunter.KeySequences;
 using UnityEngine.UI;
 using System.ComponentModel;
 
-public class CanvasExample : MonoBehaviour {
+public class InputManagerExample : MonoBehaviour {
   public KeySequencer keySequences;
   public Text label;
 
