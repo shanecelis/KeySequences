@@ -80,7 +80,7 @@ Setup the key sequences in the inspector.
 Enable and setup the handling in code.
 
 ``` c#
-keySequences.accept += keys => Debug.Log($"Got {keys}.");
+keySequences.accept += keys => Debug.Log($"ACCEPT {keys}");
 keySequences.Enable();
 ```
 
