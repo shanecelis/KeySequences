@@ -4,6 +4,8 @@ Fire events for particular key sequences efficiently.
 
 ![Key sequences video](Documentation~/example.gif)
 
+Demo with key sequences "abc" and "gg".
+
 ## Motivation
 
 Key sequences have many uses: they can be used as cheat codes for a game at runtime, and they can be used as a minimalist UI during game development. 
@@ -36,7 +38,7 @@ Key sequences alleviate some of these issues by allowing mnemonics to group oper
 
 KeySequencer also focuses on efficiency. It uses a [Trie](https://en.wikipedia.org/wiki/Trie) to detect whether the accumulated characters have any possible matches. If no key sequences are possible, the accumulated characters are discarded. 
 
-I went to pains to eliminate any allocations during KeySequencer's normal running.
+I went to pains to eliminate any allocations during KeySequencer's normal running where possible (see FAQ for further details). My "elbow test" was that I wanted to ensure that KeySequencer does not allocate anything even if I'm resting my elbows on my keyboard. However when an expected key sequence is provided, there is a string allocation[^0].
 
 ## Requirements
 
@@ -190,4 +192,5 @@ This package is released under the MIT license.
 
 This package was originally generated from [Shane Celis](https://twitter.com/shanecelis)'s [unity-package-template](https://github.com/shanecelis/unity-package-template).
 
+[^0]: Huh. Now that I think about `accept` callback string allocation could be avoided.
 [^1]: There are a few other allocations: a) the `accumulated` property if called will allocate a string but 1-length strings are cached, so holding down a button will only allocate a string once.
