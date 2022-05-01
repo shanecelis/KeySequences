@@ -29,16 +29,18 @@ public class KeySequencer : IKeySequencer
   [SerializeField]
   private string[] keySequences;
 #endif
+  public const int MaxKeySequenceCount = 10;
+
   [NonSerialized]
   protected Trie trie = new Trie();
   [NonSerialized]
   private StringBuilder keyAccum = new StringBuilder();
   [NonSerialized]
-  private char[] buffer = new char[10];
+  private char[] buffer = new char[MaxKeySequenceCount];
   [NonSerialized]
-  private CharCollection charCollection;
+  private EnumerableCacher<char> charCollection;
+
   public event Action<string> accept;
-  // public event Action<string> reject;
   public event PropertyChangedEventHandler propertyChanged;
 
   public bool enabled { get; private set; } = false;
@@ -57,7 +59,7 @@ public class KeySequencer : IKeySequencer
     private set {
       if (_accumulated != value) {
         _accumulated = value;
-        // propertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(accumulated)));
+        propertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(accumulated)));
       }
     }
   }
@@ -85,58 +87,64 @@ public class KeySequencer : IKeySequencer
       it requires boxing if I need to pass it on as an IEnumerable<char>, which I do. So
       they remain classes.
 
+      Instead, I made this enumerable cache one enumerator, which if only one
+      enumerator is used at a time, there won't be any allocation. If more than
+      one enumerator is used, the code will still behave appropriately but it
+      will cause an allocation.
+
       Really good reference[1] on how to get allocation-less enumeration in a game context.
 
       [1]: https://hellomister.com/blog/how-to-ienumerable/
   */
-  internal class CharCollection : IEnumerable<char> {
-  // internal struct CharCollection {
-    internal char[] buffer;
+  internal class EnumerableCacher<T>: IEnumerable<T> {
+    internal T[] buffer;
     internal int start;
     internal int count;
-    // IEnumerator<char> cache;
+    /** Keep one enumerator cached. */
     Enumerator cache;
-    internal CharCollection(char[] buffer, int start, int count) {
+    internal EnumerableCacher(T[] buffer, int start, int count) {
       this.buffer = buffer;
       this.start = start;
       this.count = count;
-      // this.cache = new Enumerator(this);
       this.cache = new Enumerator(this);
+      this.cache.Dispose();
     }
-    public Enumerator GetEnumerator()// => new Enumerator(this);
-    {
-      cache.Reset();
-      return cache;
+
+    /** Return the cached enumerator as long as it's been disposed. */
+    public Enumerator GetEnumerator() {
+      if (cache.disposed) {
+        cache.Reset();
+        return cache;
+      } else {
+        return new Enumerator(this);
+      }
     }
-    // public IEnumerator<char> GetEnumerator() {
-    //   // e.Reset();
-    //   // return e;
-    //   return new Enumerator(this);
-    // }
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator(); // boxing conversion if used, but required by IEnumerable interface
-    IEnumerator<char> IEnumerable<char>.GetEnumerator() => GetEnumerator();
-    //=> new Enumerator(this);// boxing conversion if used, but required by IEnumerable interface
-    // {
-    //   e.Reset();
-    //   return e;
-    // }
+    IEnumerator<T> IEnumerable<T>.GetEnumerator() => GetEnumerator();
 
-    internal class Enumerator : IEnumerator<char> {
-      CharCollection collection;
+    internal class Enumerator : IEnumerator<T> {
+      EnumerableCacher<T> collection;
       int i;
-      internal Enumerator(CharCollection collection) {
+      internal bool disposed;
+      internal Enumerator(EnumerableCacher<T> collection) {
         this.collection = collection;
         i = collection.start - 1;
+        disposed = false;
       }
       public bool MoveNext() {
         i++;
         return i < collection.start + collection.count;
       }
-      public char Current => collection.buffer[i];
+      public T Current => collection.buffer[i];
       object IEnumerator.Current => Current; // required by IEnumerator interface, but doesn't need to be public
-      public void Reset() => i = collection.start - 1;
-      public void Dispose() { }
+      public void Reset() {
+        i = collection.start - 1;
+        disposed = false;
+      }
+      public void Dispose() {
+        disposed = true;
+      }
     }
   }
 
@@ -151,7 +159,7 @@ public class KeySequencer : IKeySequencer
     this.accumulated = null;
     // if (charCollection == null)
     if (charCollection == null) {
-      charCollection = new CharCollection(buffer, 0, length);
+      charCollection = new EnumerableCacher<char>(buffer, 0, length);
       // boxedBuffer = charCollection;
     }
     charCollection.count = length;
