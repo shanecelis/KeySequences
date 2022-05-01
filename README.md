@@ -34,7 +34,9 @@ Key sequences alleviate some of these issues by allowing mnemonics to group oper
 | dl           | Door lock       |
 | idqd         | Enable god mode |
 
-KeySequencer also focuses on efficiency. It uses a [Trie](https://en.wikipedia.org/wiki/Trie) to detect whether the accumulated characters have any possible matches. If no key sequences are possible, the accumulated characters are discarded.
+KeySequencer also focuses on efficiency. It uses a [Trie](https://en.wikipedia.org/wiki/Trie) to detect whether the accumulated characters have any possible matches. If no key sequences are possible, the accumulated characters are discarded. 
+
+I went to pains to eliminate any allocations during KeySequencer's normal running.
 
 ## Requirements
 
@@ -168,12 +170,24 @@ See the sample scenes. While running, the scene each print the input character a
 
 - Consider adding a global disable for use when [an input field is being used](https://forum.unity.com/threads/how-to-disable-movement-keys-when-typing-into-input-box.389942/#post-4333129).
 
-- There is one string created from a string buffer each time an input is created to query against the trie. Is there a way to avoid that allocation? 
+- ~~There is one string created from a string buffer each time an input is created to query against the trie.~~ Is there a way to avoid that allocation? 
+
+  Yes. I have forked the [rm.Trie](https://github.com/shanecelis/rm.Trie) library and modified a few methods to accept an IEnumerable<char> which string does implement, so it is backward source compatible. And I implemented an IEnumerable that caches one IEnumerator to avoid an allocation. (I did try using a struct IEnumerator, which avoids any allocation in a `foreach` loop; however, there is a boxing allocation when passed to another method.)
+  
+  The result of this is that the "1 Demo New InputSystem" no longer allocates on key presses, and only allocates[^1] on accepted key sequences.
+  
+  The "0 Demo Legacy InputManager" on the other hand does allocate a string when Unity's `Input.inputString` is called. This is somewhat unavoidable due to Unity's API. There are more [notes in sample code](Samples~/0 Demo Legacy InputManager/InputManagerExample.cs). But one might imagine your game has suffered worse problems than an errant string allocation. This issue recommends using the new InputSystem's `Keyboard.current.onTextInput` but doesn't preclude using the old one. As a compromise you could use both: Keep your old code and use the new API.
 
 - Consider adding a timeout for accumulated key sequences. Or a means for the user to timeout it out themselves.
 
 - Q: Is there a way of getting the hardware keys pressed rather than relying on the `char` produced?
 
+## License
+
+This package is released under the MIT license.
+
 ## Acknowledgements
 
 This package was originally generated from [Shane Celis](https://twitter.com/shanecelis)'s [unity-package-template](https://github.com/shanecelis/unity-package-template).
+
+[^1]: There are a few other allocations: a) the `accumulated` property if called will allocate a string but 1-length strings are cached, so holding down a button will only allocate a string once.
