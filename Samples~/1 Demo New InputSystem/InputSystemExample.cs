@@ -8,6 +8,8 @@ using UnityEngine.InputSystem;
 
 public class InputSystemExample : MonoBehaviour {
   public KeySequencer keySequences;
+  [Header("Turn off logging (causes allocations)")]
+  public bool enableLogging = true;
   public Text label;
 
   void OnEnable() {
@@ -18,12 +20,14 @@ public class InputSystemExample : MonoBehaviour {
      */
     // Keyboard.current.onTextInput += keySequences.Input;
     Keyboard.current.onTextInput += Input;
+    keySequences.propertyChanged += OnPropertyChange;
   }
 
   void OnDisable() {
     keySequences.Disable();
     // Keyboard.current.onTextInput -= keySequences.Input;
     Keyboard.current.onTextInput -= Input;
+    keySequences.propertyChanged -= OnPropertyChange;
   }
 
   void Start() {
@@ -37,16 +41,17 @@ public class InputSystemExample : MonoBehaviour {
       Debug.Log(msg);
       label.text = msg;
     };
-    keySequences.propertyChanged += OnPropertyChange;
 #endif
   }
 
   void Input(char c) {
     keySequences.Input(c);
-    if (! char.IsControl(c))
-      Debug.Log($"Input char '{c}' int {(int) c}");
-    else
-      Debug.Log($"Input char non-printable int {(int) c}");
+    if (enableLogging) {
+      if (! char.IsControl(c))
+        Debug.Log($"Input char '{c}' int {(int) c}");
+      else
+        Debug.Log($"Input char non-printable int {(int) c}");
+    }
   }
 
   void OnPropertyChange(object sender, PropertyChangedEventArgs args) {

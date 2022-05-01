@@ -51,13 +51,13 @@ public class VideoExample : MonoBehaviour {
   /** We have to do this 60 times a second to make sure we don't miss a key.
       Boo. */
   void Update() {
-    foreach (var c in Input.inputString) {
-      keySequences.Input(c);
-      if (! char.IsControl(c))
-        Log($"Input char '{c}' int {(int) c}");
-      else
-        Log($"Input char non-printable int {(int) c}");
-    }
+    // foreach (var c in Input.inputString) {
+    //   // keySequences.Input(c);
+    //   if (! char.IsControl(c))
+    //     Log($"Input char '{c}' int {(int) c}");
+    //   else
+    //     Log($"Input char non-printable int {(int) c}");
+    // }
   }
 
   void OnPropertyChange(object sender, PropertyChangedEventArgs args) {
