@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections;
 using System.ComponentModel;
-using System.Text;
-using System.Linq;
 using rm.Trie;
 
 /** Strictly speaking this class doesn't depend on Unity. But to play nice with
@@ -34,11 +32,15 @@ public class KeySequencer : IKeySequencer
   [NonSerialized]
   protected Trie trie = new Trie();
   [NonSerialized]
-  private StringBuilder keyAccum = new StringBuilder();
+  private char[] keyAccum = new char[MaxKeySequenceCount];
   [NonSerialized]
-  private char[] buffer = new char[MaxKeySequenceCount];
+  private int keyAccumNext = 0;
   [NonSerialized]
-  private EnumerableCacher<char> charCollection;
+  private EnumerableCacher<char> keyAccumEnumerable;
+  [NonSerialized]
+  private Dictionary<char, string> charToString = new Dictionary<char, string>();
+  [NonSerialized]
+  private PropertyChangedEventArgs accumulatedChange = new PropertyChangedEventArgs(nameof(accumulated));
 
   public event Action<string> accept;
   public event PropertyChangedEventHandler propertyChanged;
@@ -47,19 +49,32 @@ public class KeySequencer : IKeySequencer
 
   public void Enable() => enabled = true;
   public void Disable() => enabled = false;
-
   [NonSerialized]
-  private string _accumulated;
+  private string _accumulated = string.Empty;
   public string accumulated {
     get {
-      if (_accumulated == null)
-        _accumulated = new string(buffer, 0, keyAccum.Length);
+      if (_accumulated == null) {
+        switch (keyAccumNext) {
+          case 0:
+            _accumulated = string.Empty;
+            break;
+          case 1:
+            // Little optimization. If someone holds down on the 'a' key,
+            // don't create a new string for each one.
+            if (! charToString.TryGetValue(keyAccum[0], out _accumulated))
+              charToString[keyAccum[0]] = _accumulated = new string(keyAccum, 0, keyAccumNext);
+            break;
+          default:
+            _accumulated = new string(keyAccum, 0, keyAccumNext);
+            break;
+        }
+      }
       return _accumulated;
     }
     private set {
       if (_accumulated != value) {
         _accumulated = value;
-        propertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(accumulated)));
+        propertyChanged?.Invoke(this, accumulatedChange);
       }
     }
   }
@@ -151,36 +166,27 @@ public class KeySequencer : IKeySequencer
   public void Input(char c) {
     if (! enabled)
       return;
-    keyAccum.Append(c);
-    int length = Math.Min(buffer.Length, keyAccum.Length);
-    keyAccum.CopyTo(0, buffer, 0, length);
-
-    // var key = this.accumulated = keyAccum.ToString();
-    this.accumulated = null;
-    // if (charCollection == null)
-    if (charCollection == null) {
-      charCollection = new EnumerableCacher<char>(buffer, 0, length);
-      // boxedBuffer = charCollection;
-    }
-    charCollection.count = length;
-    foreach (char d in charCollection)
-      ;
-    // if (TryGetWord(buffer.Take(keyAccum.Length), out bool hasPrefix)) {
-    // TryGetWord(charCollection, out bool hasPrefix2);
-    // return;
-    if (TryGetWord(charCollection, out bool hasPrefix)) {
+    keyAccum[keyAccumNext++] = c;
+    int length = Math.Min(keyAccum.Length, keyAccumNext);
+    // Whatever we accumulated before, it's invalid now.
+    // this.accumulated = null;
+    if (keyAccumEnumerable == null)
+      keyAccumEnumerable = new EnumerableCacher<char>(keyAccum, 0, length);
+    keyAccumEnumerable.count = length;
+    if (TryGetWord(keyAccumEnumerable, out bool hasPrefix)) {
       // We have a key.
+      this.accumulated = null;
       if (accept != null)
         accept(this.accumulated);
     } else if (! hasPrefix) {
       // No key and no prefix.
       // if (reject != null)
       //   reject(key);
-      this.accumulated = null;
+      // this.accumulated = null;
       // We could be starting a new input.
-      if (keyAccum.Length > 1) {
+      if (keyAccumNext > 1) {
         // Re-evaluate with a clean slate.
-        keyAccum.Clear();
+        keyAccumNext = 0;
         // Recurse. Will only ever be one call deep.
         Input(c);
         return;
@@ -188,9 +194,9 @@ public class KeySequencer : IKeySequencer
     }
 
     if (! hasPrefix) {
-      keyAccum.Clear();
-      // this.accumulated = "";
+      keyAccumNext = 0;
     }
+    this.accumulated = null;
   }
 
 #if UNITY_2019_4_OR_NEWER
