@@ -142,7 +142,7 @@ keySequences.Input('g');
 keySequences.Input('g'); // Logs "ACCEPT gg VALUE 200"
 ```
 
-See sample "2 demo" which demonstrates how to setup a KeySequencerMap<int> that will work with Unity's inspector.
+See sample "2 demo" which demonstrates how to setup a `KeySequencerMap<int>` that will work with Unity's inspector.
 
 ![Key sequences map in inspector](Documentation~/keySequencesMapInspector.png)
 
@@ -174,9 +174,9 @@ See the sample scenes. While running, the scene each print the input character a
 
 - ~~There is one string created from a string buffer each time an input is created to query against the trie.~~ Is there a way to avoid that allocation? 
 
-  Yes. I have forked the [rm.Trie](https://github.com/shanecelis/rm.Trie) library and modified a few methods to accept an IEnumerable<char> which string does implement, so it is backward source compatible. And I implemented an IEnumerable that caches one IEnumerator to avoid an allocation. (I did try using a struct IEnumerator, which avoids any allocation in a `foreach` loop; however, there is a boxing allocation when passed to another method.)
+  Yes. I have forked the [rm.Trie](https://github.com/shanecelis/rm.Trie) library and modified a few methods to accept an `IEnumerable<char>` which string does implement, so it is backward source compatible. And I implemented an `IEnumerable` that caches one `IEnumerator` to avoid an allocation. (I did try using a [`struct IEnumerator`](https://hellomister.com/blog/how-to-ienumerable/) that avoids any allocation in a `foreach` loop; however, there is a boxing allocation when passed to another method.)
   
-  The result of this is that the "1 Demo New InputSystem" no longer allocates on key presses, and only allocates[^1] on accepted key sequences.
+  The result of this is that the "1 Demo New InputSystem" no longer allocates on key presses and only allocates[^1] on accepted key sequences.
   
   The "0 Demo Legacy InputManager" on the other hand does allocate a string when Unity's `Input.inputString` is called. This is somewhat unavoidable due to Unity's API. There are more [notes in sample code](Samples~/0 Demo Legacy InputManager/InputManagerExample.cs). But one might imagine your game has suffered worse problems than an errant string allocation. This issue recommends using the new InputSystem's `Keyboard.current.onTextInput` but doesn't preclude using the old one. As a compromise you could use both: Keep your old code and use the new API.
 
