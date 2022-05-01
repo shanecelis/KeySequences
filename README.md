@@ -178,7 +178,7 @@ See the sample scenes. While running, the scene each print the input character a
   
   The result of this is that the "1 Demo New InputSystem" no longer allocates on key presses and only allocates[^1] on accepted key sequences.
   
-  The "0 Demo Legacy InputManager" on the other hand does allocate a string when Unity's `Input.inputString` is called. This is somewhat unavoidable due to Unity's API. There are more [notes in sample code](Samples~/0 Demo Legacy InputManager/InputManagerExample.cs). But one might imagine your game has suffered worse problems than an errant string allocation. This issue recommends using the new InputSystem's `Keyboard.current.onTextInput` but doesn't preclude using the old one. As a compromise you could use both: Keep your old code and use the new API.
+  The "0 Demo Legacy InputManager" on the other hand does allocate a string when Unity's `Input.inputString` is called. This is somewhat unavoidable due to Unity's API. There are more [notes in sample code](https://github.com/shanecelis/KeySequences/blob/bca96f252e95d9dfb42754088824da1e87a03b03/Samples%7E/0%20Demo%20Legacy%20InputManager/InputManagerExample.cs#L48). But one might imagine your game has suffered worse problems than an errant string allocation. This issue recommends using the new InputSystem's `Keyboard.current.onTextInput` but doesn't preclude using the old one. As a compromise you could use both: Keep your old code and use the new API.
 
 - Consider adding a timeout for accumulated key sequences. Or a means for the user to timeout it out themselves.
 
